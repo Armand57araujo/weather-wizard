@@ -13,7 +13,7 @@
 In this project I created a weather web application displaying a 5 day forecast for a given city with the ability to recall past searches for display from local storage.
 
 
-[Visit the Deployed Site](https://armand57araujo.github.io/busy-bees-need-schedules/)
+[Visit the Deployed Site]((https://armand57araujo.github.io/weather-wizard/)
 
 ![weathe-rwizard.png](weather-wizard.png)
 
