@@ -8,30 +8,42 @@ const searchHistoryContainer = document.getElementById('searchHistory');
 
 
 function getForecost(lat, lon) {
-    //const apiUrl = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${API_KEY}`;
+    const apiUrl = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric`;
 
-    const apiUrl = `https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lon}&appid=${API_KEY}`
+    // const apiUrl = `https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lon}&appid=${API_KEY}`
+
     fetch(apiUrl)
         .then(response => response.json())
         .then(data => {
-            console.log(data)
-
-            for (let i = 0; i < data.list.length; i = i + 8) {
+            console.log("this is my forecast data", data)
+        
+            document.getElementById("weatherForecast").innerHTML=''
+            for (let i = 6; i < data?.list?.length; i = i + 8) {
                 console.log("day", data.list[i]);
                 //const weatherCard = document.getElementById('weatherInfo');
-                const card = document.createElement('div');
+                let card = document.createElement('div');
 
                 card.classList.add('card');
 
                 card.innerHTML = `
-                    <a link= ${data.cityName} </a>
-                    <p>Date: ${data.date}</p>
-                    <img src="${data.icon}" alt="Weather Icon">
-                    <p>Temperature: ${data.temperature}°C</p>
-                    <p>Humidity: ${data.humidity}%</p>
-                    <p>Wind Speed: ${data.windSpeed} m/s</p>
+                   
+
+                    <p>Date: ${dayjs.unix(data.list[i].dt).format("MM/DD/YY")}</p>
+                    <img src="https://openweathermap.org/img/w/${data.list[i].weather[0].icon}.png" alt="Weather Icon">
+                    <p>Temperature: ${data.list[i].main.temp}°C</p>
+                    <p>Humidity: ${data.list[i].main.humidity}%</p>
+                    <p>Wind Speed: ${data.list[i].wind.speed} m/s</p>
                     `;
-                forecastCardsContainer.appendChild(card);
+     
+                
+
+                    
+                    console.log("card",card)
+                    document.getElementById("weatherForecast").appendChild(card)
+                    // console.log("forecastCardsContainer", forecastCardsContainer)
+
+                // forecastCardsContainer.appendChild(card);
+            
             }
 
         })
@@ -53,7 +65,7 @@ function getWeather(city) {
             const description = weather[0].description;
             const lat = data.coord.lat;
             const lon = data.coord.lon;
-            // console.log(data)
+            console.log(data)
             getForecost(lat, lon)
 
             weatherInfo.innerHTML = `
@@ -106,25 +118,10 @@ function addToSearchHistory(city) {
 }
 
 
-// function displaySearchHistory() {
-//     const searchHistoryContainer = document.getElementById('searchHistory');
-//     searchHistoryContainer.innerHTML = '<h2>Search History</h2>';
-
-//     const searchHistory = JSON.parse(localStorage.getItem('searchHistory')) || [];
-
-//     searchHistory.forEach(city => {
-//         const historyItem = document.createElement('button'); 
-//          historyItem.classList.add('historyItem');
-//         historyItem.textContent = city;
-//         historyItem.addEventListener('click', () => getWeatherData(city));
-//         searchHistoryContainer.appendChild(historyItem);
-//     });
-// }
-
 function displaySearchHistory() {
 
     searchHistoryContainer.innerHTML = '';
-
+    searchHistoryContainer.innerHTML = '<h2>Search History</h2>';
     const searchHistory = JSON.parse(localStorage.getItem('searchHistory')) || [];
 
     for (let i = searchHistory.length - 1; i >= 0; i--) {
@@ -132,7 +129,7 @@ function displaySearchHistory() {
         historyItem.setAttribute('type', 'button');
         historyItem.classList.add('historyItem');
         historyItem.textContent = searchHistory[i];
-        historyItem.addEventListener('click', () => getWeatherData(searchHistory[i]));
+        historyItem.addEventListener('click', () => getWeather(searchHistory[i]));
         searchHistoryContainer.appendChild(historyItem);
 
     }
@@ -152,8 +149,10 @@ searchForm.addEventListener('submit', (e) => {
     if (city !== '') {
         getWeather(city);
         addToSearchHistory(city);
+        // getForecost(lat, lon);
+        
     }
     cityInput.value = '';
 
-    // deleteItems() 
+   
 });

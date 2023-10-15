@@ -71,3 +71,18 @@ button:hover {
 #searchHistory a:hover {
     text-decoration: underline;
 }
+
+#weatherForecast {
+
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    
+}
+
+#weatherForecast div {
+
+    margin: 25px;
+
+
+}
